@@ -1,7 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { Project } from './project.entity';
 import { DataSource, Repository } from 'typeorm';
-import { GetProjectsDto } from '@app/shared/dto/get-projects.dto';
+import {
+  CreateProjectDto,
+  GetProjectsDto,
+  UpdateProjectDto,
+} from '@app/shared/dto/project.dto';
+import { ProjectStatus } from '@app/shared/enums/projectStatus.enum';
 
 @Injectable()
 export class ProjectsRepository extends Repository<Project> {
@@ -10,6 +15,54 @@ export class ProjectsRepository extends Repository<Project> {
   }
 
   async getAllProjects(getProjectsDto: GetProjectsDto): Promise<Project[]> {
-    return this.find();
+    const { search, status } = getProjectsDto;
+    const queryBuilder = this.createQueryBuilder('project');
+
+    if (search) {
+      queryBuilder.where('project.name ILIKE :search', {
+        search: `%${search}%`,
+      });
+    }
+    if (status) {
+      queryBuilder.andWhere('project.status = :status', { status });
+    }
+    return queryBuilder.getMany();
+  }
+
+  async getProject(id: string): Promise<Project> {
+    const project = await this.findOneBy({ id });
+    if (!project) {
+      throw new Error(`Project with id ${id} not found`);
+    }
+    return project;
+  }
+
+  async createProject(createProjectDto: CreateProjectDto): Promise<Project> {
+    const project = this.create({
+      ...createProjectDto,
+      status: ProjectStatus.NOT_STARTED,
+    });
+    return this.save(project);
+  }
+
+  async updateProject(
+    id: string,
+    updateProjectDto: UpdateProjectDto,
+  ): Promise<Project> {
+    const result = await this.update({ id }, updateProjectDto);
+
+    if (result.affected === 0) {
+      throw new Error(`Project with id ${id} not found`);
+    }
+    return this.getProject(id);
+  }
+
+  async deleteProject(id: string): Promise<string> {
+    const result = await this.delete({ id });
+    if (result.affected === 0) {
+      throw new Error(`Project with id ${id} not found`);
+    }
+
+    return id;
   }
 }
