@@ -8,7 +8,7 @@ import {
   Query,
   Patch,
 } from '@nestjs/common';
-import { ProjectService } from './project.service';
+import { ProjectService } from './projects.service';
 import { CreateProjectDto, UpdateProjectDto } from '@app/shared';
 import { GetProjectsDto } from '@app/shared/dto/project.dto';
 

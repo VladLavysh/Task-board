@@ -19,18 +19,21 @@ export class ProjectService {
   }
 
   getProject(id: string) {
-    return this.projectClient.send(PROJECT_MESSAGE_PATTERNS.GET_ONE, id);
+    return this.projectClient.send<Project>(
+      PROJECT_MESSAGE_PATTERNS.GET_ONE,
+      id,
+    );
   }
 
   createProject(createProjectDto: CreateProjectDto) {
-    return this.projectClient.send(
+    return this.projectClient.send<Project>(
       PROJECT_MESSAGE_PATTERNS.CREATE,
       createProjectDto,
     );
   }
 
   updateProject(id: string, updateProjectDto: UpdateProjectDto) {
-    return this.projectClient.send(PROJECT_MESSAGE_PATTERNS.UPDATE, {
+    return this.projectClient.send<Project>(PROJECT_MESSAGE_PATTERNS.UPDATE, {
       id,
       updateProjectDto,
     });

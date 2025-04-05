@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Project } from './project.entity';
 import { DataSource, Repository } from 'typeorm';
+import { Project } from './project.entity';
 import {
   CreateProjectDto,
   GetProjectsDto,

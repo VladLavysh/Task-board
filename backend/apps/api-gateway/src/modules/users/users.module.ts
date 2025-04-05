@@ -1,23 +1,23 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { SERVICES } from '@app/shared';
-import { ProjectController } from './project.controller';
-import { ProjectService } from './project.service';
+import { UsersController } from './users.controller';
+import { UsersService } from './users.service';
 
 @Module({
   imports: [
     ClientsModule.register([
       {
-        name: SERVICES.PROJECT_SERVICE,
+        name: SERVICES.USER_SERVICE,
         transport: Transport.TCP,
         options: {
           host: 'localhost',
-          port: 3001,
+          port: 3002,
         },
       },
     ]),
   ],
-  controllers: [ProjectController],
-  providers: [ProjectService],
+  controllers: [UsersController],
+  providers: [UsersService],
 })
-export class ProjectModule {}
+export class UsersModule {}

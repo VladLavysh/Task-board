@@ -1,7 +1,13 @@
 import { ProjectStatus } from '@app/shared/enums/projectStatus.enum';
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
-@Entity()
+@Entity('projects')
 export class Project {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -12,7 +18,11 @@ export class Project {
   @Column('text')
   description: string;
 
-  @Column('text')
+  @Column({
+    type: 'enum',
+    enum: ProjectStatus,
+    default: ProjectStatus.NOT_STARTED,
+  })
   status: ProjectStatus;
 
   @Column('date', { nullable: true })
@@ -20,4 +30,10 @@ export class Project {
 
   @Column('date', { nullable: true })
   endDate: Date;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }

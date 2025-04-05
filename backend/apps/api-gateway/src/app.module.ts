@@ -2,7 +2,8 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ProjectModule } from './modules/project/project.module';
+import { ProjectsModule } from './modules/projects/projects.module';
+import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
@@ -11,7 +12,8 @@ import { AuthModule } from './modules/auth/auth.module';
       isGlobal: true,
       envFilePath: './apps/api-gateway/.env',
     }),
-    ProjectModule,
+    ProjectsModule,
+    UsersModule,
     AuthModule,
   ],
   controllers: [AppController],

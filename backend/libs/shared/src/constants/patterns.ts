@@ -1,9 +1,15 @@
 export const AUTH_MESSAGE_PATTERNS = {
-  LOGIN: { cmd: 'auth.login' },
-  LOGOUT: { cmd: 'auth.logout' },
-  REGISTER: { cmd: 'auth.register' },
+  LOGIN: { cmd: 'auth.signIn' },
+  LOGOUT: { cmd: 'auth.signOut' },
   FORGOT_PASSWORD: { cmd: 'auth.forgotPassword' },
   RESET_PASSWORD: { cmd: 'auth.resetPassword' },
+  REFRESH_TOKEN: { cmd: 'auth.refreshToken' },
+};
+
+export const USER_MESSAGE_PATTERNS = {
+  CREATE: { cmd: 'users.createUser' },
+  GET_ONE: { cmd: 'users.getUser' },
+  UPDATE: { cmd: 'users.updateUser' },
 };
 
 export const PROJECT_MESSAGE_PATTERNS = {
