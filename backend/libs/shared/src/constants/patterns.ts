@@ -19,3 +19,11 @@ export const PROJECT_MESSAGE_PATTERNS = {
   UPDATE: { cmd: 'projects.updateProject' },
   DELETE: { cmd: 'projects.deleteProject' },
 };
+
+export const TASK_MESSAGE_PATTERNS = {
+  GET_ALL: { cmd: 'tasks.getAllTasks' },
+  GET_ONE: { cmd: 'tasks.getTask' },
+  CREATE: { cmd: 'tasks.createTask' },
+  UPDATE: { cmd: 'tasks.updateTask' },
+  DELETE: { cmd: 'tasks.deleteTask' },
+};

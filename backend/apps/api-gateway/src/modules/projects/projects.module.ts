@@ -3,6 +3,8 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { SERVICES } from '@app/shared';
 import { ProjectController } from './projects.controller';
 import { ProjectService } from './projects.service';
+import { TasksController } from './tasks.controller';
+import { TasksService } from './tasks.service';
 
 @Module({
   imports: [
@@ -17,7 +19,7 @@ import { ProjectService } from './projects.service';
       },
     ]),
   ],
-  controllers: [ProjectController],
-  providers: [ProjectService],
+  controllers: [ProjectController, TasksController],
+  providers: [ProjectService, TasksService],
 })
 export class ProjectsModule {}

@@ -5,7 +5,9 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
+import { Task } from './tasks/task.entity';
 
 @Entity('projects')
 export class Project {
@@ -30,6 +32,9 @@ export class Project {
 
   @Column('date', { nullable: true })
   endDate: Date;
+
+  @OneToMany(() => Task, (task) => task.project)
+  tasks: Task[];
 
   @CreateDateColumn()
   createdAt: Date;
