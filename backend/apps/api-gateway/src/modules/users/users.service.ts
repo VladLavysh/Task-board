@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { SERVICES } from '@app/shared';
 import { USER_MESSAGE_PATTERNS } from '@app/shared';
-import { User } from 'apps/users/src/user.entity';
+import { User } from '@app/shared/entities/user.entity';
 import { CreateUserDto } from '@app/shared/dto/user.dto';
 
 @Injectable()

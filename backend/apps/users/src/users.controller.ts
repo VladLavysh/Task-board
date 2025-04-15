@@ -2,7 +2,7 @@ import { Body, Controller, Param } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 import { UsersService } from './users.service';
 import { CreateUserDto, UpdateUserDto } from '@app/shared/dto/user.dto';
-import { User } from 'apps/users/src/user.entity';
+import { User } from '@app/shared/entities/user.entity';
 import { USER_MESSAGE_PATTERNS } from '@app/shared';
 
 @Controller()

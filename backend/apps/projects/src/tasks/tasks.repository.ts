@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { Task } from './task.entity';
 import { GetTasksDto } from '@app/shared/dto/task.dto';
@@ -12,7 +12,7 @@ export class TasksRepository extends Repository<Task> {
   async getTaskById(id: string): Promise<Task | null> {
     const task = await this.findOneBy({ id });
     if (!task) {
-      throw new Error(`Task with ID ${id} not found`);
+      throw new NotFoundException(`Task with ID ${id} not found`);
     }
     return task;
   }
@@ -44,7 +44,7 @@ export class TasksRepository extends Repository<Task> {
   }
 
   async deleteTask(id: string): Promise<string> {
-    const task = (await this.getTaskById(id)) as Task;
+    const task = (await this.getTaskById(id))!;
     const taskId = task.id;
     await this.remove(task);
     return taskId;

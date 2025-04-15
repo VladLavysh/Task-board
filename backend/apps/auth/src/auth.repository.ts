@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { SignInAuthDto } from '@app/shared/dto/auth.dto';
-import { User } from 'apps/users/src/user.entity';
+import { User } from '@app/shared/entities/user.entity';
 
 @Injectable()
 export class AuthRepository extends Repository<User> {

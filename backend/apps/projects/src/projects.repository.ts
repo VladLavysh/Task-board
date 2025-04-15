@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import { Project } from './project.entity';
 import {
@@ -32,7 +32,7 @@ export class ProjectsRepository extends Repository<Project> {
   async getProject(id: string): Promise<Project> {
     const project = await this.findOneBy({ id });
     if (!project) {
-      throw new Error(`Project with id ${id} not found`);
+      throw new NotFoundException(`Project with ID ${id} not found`);
     }
     return project;
   }
@@ -52,7 +52,7 @@ export class ProjectsRepository extends Repository<Project> {
     const result = await this.update({ id }, updateProjectDto);
 
     if (result.affected === 0) {
-      throw new Error(`Project with id ${id} not found`);
+      throw new NotFoundException(`Project with ID ${id} not found`);
     }
     return this.getProject(id);
   }
@@ -60,7 +60,7 @@ export class ProjectsRepository extends Repository<Project> {
   async deleteProject(id: string): Promise<string> {
     const result = await this.delete({ id });
     if (result.affected === 0) {
-      throw new Error(`Project with id ${id} not found`);
+      throw new NotFoundException(`Project with ID ${id} not found`);
     }
 
     return id;

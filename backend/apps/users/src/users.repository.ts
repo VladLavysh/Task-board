@@ -1,7 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+} from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { User } from './user.entity';
+import { User } from '@app/shared/entities/user.entity';
 import { CreateUserDto, UpdateUserDto } from '@app/shared/dto/user.dto';
 
 @Injectable()
@@ -18,7 +22,7 @@ export class UsersRepository extends Repository<User> {
   async getUser(id: string): Promise<User> {
     const user = await this.findOneBy({ id });
     if (!user) {
-      throw new Error(`User with id ${id} not found`);
+      throw new NotFoundException(`User with ID ${id} not found`);
     }
     return user;
   }
@@ -28,7 +32,7 @@ export class UsersRepository extends Repository<User> {
 
     const existingUser = await this.findOneBy({ email });
     if (existingUser) {
-      throw new Error(`User with email ${email} already exists`);
+      throw new ConflictException(`User with email ${email} already exists`);
     }
 
     const hashedPassword = await this.getHashedPassword(password);
@@ -46,7 +50,7 @@ export class UsersRepository extends Repository<User> {
     const user = await this.findOneBy({ id });
 
     if (!user) {
-      throw new Error(`User with id ${id} not found`);
+      throw new NotFoundException(`User with ID ${id} not found`);
     }
 
     const updatedData = { ...updateUserDto };
