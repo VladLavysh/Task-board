@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { SignInAuthDto } from '@app/shared/dto/auth.dto';
@@ -15,14 +19,16 @@ export class AuthRepository extends Repository<User> {
 
     const user = await this.findOneBy({ email });
     if (!user) {
-      throw new Error(`User with email ${email} not found`);
+      throw new NotFoundException(`User with email ${email} not found`);
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      throw new Error('Invalid credentials');
+      throw new UnauthorizedException('Invalid credentials');
     }
 
-    return user;
+    // Remove password from response
+    const { password: _, ...result } = user;
+    return result as User;
   }
 }
