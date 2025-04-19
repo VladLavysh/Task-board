@@ -3,21 +3,30 @@ import { ProjectsController } from './projects.controller';
 import { ProjectsService } from './projects.service';
 import { ProjectsRepository } from './projects.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Project } from './project.entity';
 import { TasksModule } from './tasks/tasks.module';
 import { Task } from './tasks/task.entity';
+import { configModuleOptions } from '@config';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'devuser',
-      password: 'devpassword',
-      database: 'devdb',
-      entities: [Project, Task],
-      synchronize: true, // Set to false in production!
+    ConfigModule.forRoot(configModuleOptions),
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        return {
+          type: 'postgres',
+          host: configService.get('database.host'),
+          port: configService.get('database.port'),
+          username: configService.get('database.username'),
+          password: String(configService.get('database.password')),
+          database: configService.get('database.database') as string,
+          entities: [Project, Task],
+          synchronize: configService.get('database.synchronize'),
+        };
+      },
     }),
     TypeOrmModule.forFeature([Project]),
     TasksModule,
