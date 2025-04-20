@@ -1,26 +1,20 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProjectsController } from './projects.controller';
 import { ProjectsService } from './projects.service';
 import { ProjectsRepository } from './projects.repository';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { Project } from './project.entity';
 import { TasksModule } from './tasks/tasks.module';
 import { Task } from './tasks/task.entity';
+import { ConfigRootModule } from '@app/shared/config/src/config.module';
+import { DatabaseModule } from '@app/shared/database/src/database.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'devuser',
-      password: 'devpassword',
-      database: 'devdb',
-      entities: [Project, Task],
-      synchronize: true, // Set to false in production!
-    }),
-    TypeOrmModule.forFeature([Project]),
+    ConfigRootModule,
     TasksModule,
+    TypeOrmModule.forFeature([Project]),
+    DatabaseModule.forEntities([Project, Task]),
   ],
   controllers: [ProjectsController],
   providers: [ProjectsService, ProjectsRepository],

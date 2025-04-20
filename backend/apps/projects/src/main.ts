@@ -10,7 +10,7 @@ async function bootstrap() {
       transport: Transport.TCP,
       options: {
         host: 'localhost',
-        port: 3001,
+        port: 3002,
       },
     },
   );
@@ -19,6 +19,6 @@ async function bootstrap() {
   app.useGlobalFilters(new AllExceptionsFilter());
 
   await app.listen();
-  console.log('Projects microservice is running on port: 3001');
+  console.log('Projects microservice is running on port: 3002');
 }
 bootstrap();
