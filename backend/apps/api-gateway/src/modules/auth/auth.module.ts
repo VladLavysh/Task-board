@@ -12,7 +12,7 @@ import { AuthService } from './auth.service';
         transport: Transport.TCP,
         options: {
           host: 'localhost',
-          port: 3003,
+          port: 3001,
         },
       },
     ]),

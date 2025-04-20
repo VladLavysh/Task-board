@@ -17,7 +17,16 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./apps/task-board-backend/test/jest-e2e.json"
+    "test:e2e": "jest --config ./apps/task-board-backend/test/jest-e2e.json",
+    "start:api-gateway": "nest start api-gateway --watch",
+    "start:auth": "nest start auth --watch",
+    "start:users": "nest start users --watch",
+    "start:projects": "nest start projects --watch",
+    "start:all": "concurrently \"npm run start:api-gateway\" \"npm run start:auth\" \"npm run start:users\" \"npm run start:projects\"",
+    "start:db": "docker-compose up -d postgres",
+    "start:db:admin": "docker-compose up -d postgres pgadmin",
+    "db:stop": "docker-compose down",
+    "db:reset": "docker-compose down -v && docker-compose up -d postgres"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
@@ -31,6 +40,7 @@
     "bcrypt": "^5.1.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
+    "concurrently": "^9.1.2",
     "joi": "^17.13.3",
     "pg": "^8.14.1",
     "reflect-metadata": "^0.2.2",
