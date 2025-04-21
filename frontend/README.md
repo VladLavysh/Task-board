@@ -1,6 +1,22 @@
-# Nuxt UI Starter
+# Task Board Frontend
 
-Look at [Nuxt docs](https://nuxt.com/docs/getting-started/introduction) and [Nuxt UI docs](https://ui.nuxt.com) to learn more.
+The frontend for the Task Board application, built with Nuxt.js, Tailwind CSS, and Nuxt UI.
+
+## Features
+
+- **Modern UI**: Clean, responsive interface built with Nuxt UI components
+- **Authentication**: JWT-based authentication with login, registration, and profile management
+- **Project Management**: Create, update, and delete projects
+- **Task Boards**: Kanban-style boards for managing tasks
+- **Real-time Updates**: Synchronize data across clients
+- **Role-based Access Control**: Different UIs and permissions based on user role
+
+## Technology Stack
+
+- [Nuxt.js](https://nuxt.com) - The Vue.js framework
+- [Nuxt UI](https://ui.nuxt.com) - Component library for rapid UI development
+- [Tailwind CSS](https://tailwindcss.com) - Utility-first CSS framework
+- [Pinia](https://pinia.vuejs.org) - State management library
 
 ## Setup
 
@@ -9,34 +25,18 @@ Make sure to install the dependencies:
 ```bash
 # npm
 npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
 ```
 
 ## Development Server
 
-Start the development server on `http://localhost:3000`:
+Start the development server on `http://localhost:8000`:
 
 ```bash
 # npm
 npm run dev
-
-# pnpm
-pnpm run dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
 ```
+
+Make sure the backend services are running as well to use all features.
 
 ## Production
 
@@ -45,15 +45,6 @@ Build the application for production:
 ```bash
 # npm
 npm run build
-
-# pnpm
-pnpm run build
-
-# yarn
-yarn build
-
-# bun
-bun run build
 ```
 
 Locally preview production build:
@@ -61,15 +52,6 @@ Locally preview production build:
 ```bash
 # npm
 npm run preview
-
-# pnpm
-pnpm run preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
 ```
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.

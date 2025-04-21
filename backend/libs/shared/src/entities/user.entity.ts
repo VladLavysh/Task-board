@@ -13,7 +13,7 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ unique: true })
   username: string;
 
   @Column({ unique: true })
@@ -32,6 +32,15 @@ export class User {
     default: UserRole.USER,
   })
   role: UserRole;
+
+  @Column({ nullable: true })
+  provider: string;
+
+  @Column({ nullable: true })
+  providerId: string;
+
+  @Column({ nullable: true })
+  avatar: string;
 
   @CreateDateColumn()
   createdAt: Date;

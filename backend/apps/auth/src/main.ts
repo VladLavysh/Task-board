@@ -1,24 +1,39 @@
 import { NestFactory } from '@nestjs/core';
-import { Transport, MicroserviceOptions } from '@nestjs/microservices';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { ConfigService } from '@nestjs/config';
+import { ValidationPipe } from '@nestjs/common';
 import { AuthModule } from './auth.module';
-import { AllExceptionsFilter } from './filters/rpc-exception.filter';
+import { RpcExceptionFilter } from './filters/rpc-exception.filter';
 
 async function bootstrap() {
-  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
-    AuthModule,
-    {
-      transport: Transport.TCP,
-      options: {
-        host: 'localhost',
-        port: 3001,
-      },
+  const app = await NestFactory.create(AuthModule);
+  const configService = app.get(ConfigService);
+
+  app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.TCP,
+    options: {
+      host: configService.get('AUTH_SERVICE_HOST', 'localhost'),
+      port: parseInt(configService.get('AUTH_SERVICE_PORT', '3001')),
     },
+  });
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+    }),
   );
 
-  // Apply the global exception filter for the microservice
-  app.useGlobalFilters(new AllExceptionsFilter());
+  app.useGlobalFilters(new RpcExceptionFilter());
 
-  await app.listen();
-  console.log('Auth microservice is running on port: 3001');
+  await app.startAllMicroservices();
+  await app.listen(configService.get('AUTH_HTTP_PORT', 4001));
+  console.log(
+    `Auth Microservice is running on port ${configService.get('AUTH_SERVICE_PORT', '3001')}`,
+  );
+  console.log(
+    `Auth HTTP server is running on port ${configService.get('AUTH_HTTP_PORT', '4001')}`,
+  );
 }
 bootstrap();

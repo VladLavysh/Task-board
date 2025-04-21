@@ -20,6 +20,16 @@ export const configValidationSchema = Joi.object({
   JWT_SECRET: Joi.string().required(),
   JWT_EXPIRATION: Joi.string().default('1h'),
 
+  // Google OAuth configuration
+  GOOGLE_CLIENT_ID: Joi.string().required(),
+  GOOGLE_CLIENT_SECRET: Joi.string().required(),
+  GOOGLE_CALLBACK_URL: Joi.string().required(),
+
+  // GitHub OAuth configuration
+  GITHUB_CLIENT_ID: Joi.string().required(),
+  GITHUB_CLIENT_SECRET: Joi.string().required(),
+  GITHUB_CALLBACK_URL: Joi.string().required(),
+
   // Microservice configuration
   API_GATEWAY_HOST: Joi.string().default('localhost'),
   API_GATEWAY_PORT: Joi.number().default(3000),

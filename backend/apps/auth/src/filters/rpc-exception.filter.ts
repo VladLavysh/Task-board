@@ -1,35 +1,39 @@
-import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
-import { Observable, throwError } from 'rxjs';
+import {
+  Catch,
+  ArgumentsHost,
+  ExceptionFilter,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
+import { Observable, throwError } from 'rxjs';
 
 @Catch()
-export class AllExceptionsFilter implements ExceptionFilter {
-  catch(exception: any, host: ArgumentsHost) {
-    // If this is already an RpcException, just return it
-    if (exception instanceof RpcException) {
-      return throwError(() => exception);
-    }
+export class RpcExceptionFilter implements ExceptionFilter {
+  catch(exception: any, host: ArgumentsHost): Observable<any> {
+    let status = HttpStatus.INTERNAL_SERVER_ERROR;
+    let message = 'Internal server error';
 
-    // For HTTP exceptions from @nestjs/common (like NotFoundException)
-    if (exception.getStatus && typeof exception.getStatus === 'function') {
-      const status = exception.getStatus();
+    if (exception instanceof HttpException) {
+      status = exception.getStatus();
       const response = exception.getResponse();
-
-      const error = {
-        message: response.message || exception.message,
-        statusCode: status,
-      };
-
-      return throwError(() => new RpcException(error));
+      message =
+        typeof response === 'string'
+          ? response
+          : (response as any).message || message;
+    } else if (exception instanceof RpcException) {
+      const error = exception.getError();
+      message =
+        typeof error === 'string' ? error : (error as any).message || message;
+      status = (error as any).statusCode || status;
+    } else if (exception.message) {
+      message = exception.message;
     }
 
-    // For regular errors, return a generic RpcException
-    return throwError(
-      () =>
-        new RpcException({
-          message: exception.message || 'Internal server error',
-          statusCode: 500,
-        }),
-    );
+    return throwError(() => ({
+      statusCode: status,
+      message,
+      timestamp: new Date().toISOString(),
+    }));
   }
 }
