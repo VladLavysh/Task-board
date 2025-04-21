@@ -20,7 +20,7 @@ export class UsersService {
   }
 
   async updateUser(updateUserDto: Partial<UpdateUserDto>): Promise<User> {
-    const { id, payload } = updateUserDto;
+    const { id, ...payload } = updateUserDto;
     return this.usersRepository.updateUser(id!, payload!);
   }
 }

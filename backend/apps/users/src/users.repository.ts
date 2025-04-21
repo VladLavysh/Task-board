@@ -36,7 +36,7 @@ export class UsersRepository extends Repository<User> {
   }
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
-    const { email, password, repeatPassword, ...rest } = createUserDto;
+    const { email, password, confirmPassword, ...rest } = createUserDto;
 
     const existingUser = await this.findOneBy({ email });
     if (existingUser) {

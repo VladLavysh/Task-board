@@ -1,38 +1,15 @@
-// import { Body, Controller } from '@nestjs/common';
-// import { MessagePattern } from '@nestjs/microservices';
-// import { AuthService } from './auth.service';
-// import { User } from '@app/shared/entities/user.entity';
-// import { SignInAuthDto } from '@app/shared/dto/auth.dto';
-// import { AUTH_MESSAGE_PATTERNS } from '@app/shared';
-
-// @Controller()
-// export class AuthController {
-//   constructor(private readonly authService: AuthService) {}
-
-//   @MessagePattern(AUTH_MESSAGE_PATTERNS.LOGIN)
-//   async signIn(signInAuthDto: SignInAuthDto): Promise<User> {
-//     return this.authService.signIn(signInAuthDto);
-//   }
-
-//   @MessagePattern(AUTH_MESSAGE_PATTERNS.LOGOUT)
-//   async signOut(userId: string): Promise<void> {
-//     return this.authService.signOut(userId);
-//   }
-// }
-
-import { Controller, Post, Body, UseGuards, Req } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 import { AuthService } from './auth.service';
 import { AUTH_MESSAGE_PATTERNS } from '@app/shared';
 import { SignInAuthDto } from '@app/shared/dto/auth.dto';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Controller()
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @MessagePattern(AUTH_MESSAGE_PATTERNS.LOGIN)
-  async login(signInAuthDto: SignInAuthDto): Promise<{ access_token: string }> {
+  async login(signInAuthDto: SignInAuthDto) {
     const user = await this.authService.validateUser(signInAuthDto);
     if (!user) {
       throw new Error('Invalid credentials');
@@ -40,14 +17,31 @@ export class AuthController {
     return this.authService.signIn(user);
   }
 
-  @MessagePattern(AUTH_MESSAGE_PATTERNS.LOGOUT)
-  async logout(userId: string): Promise<void> {
-    // Implement logout logic if necessary
+  @MessagePattern(AUTH_MESSAGE_PATTERNS.REFRESH_TOKEN)
+  async refreshToken(payload: { userId: string; email: string }) {
+    const user = { id: payload.userId, email: payload.email };
+    return this.authService.signIn(user as any);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Post('protected')
-  getProtected(@Req() req) {
-    return req.user;
+  @MessagePattern(AUTH_MESSAGE_PATTERNS.VALIDATE_GOOGLE)
+  async validateGoogleUser(profile: any) {
+    return this.authService.validateOAuthUser(profile, 'google');
+  }
+
+  @MessagePattern(AUTH_MESSAGE_PATTERNS.VALIDATE_GITHUB)
+  async validateGithubUser(profile: any) {
+    return this.authService.validateOAuthUser(profile, 'github');
+  }
+
+  @MessagePattern(AUTH_MESSAGE_PATTERNS.LOGOUT)
+  async logout(userId: string) {
+    // In JWT auth, logout is typically handled client-side by removing the token
+    // No server-side action required, but we can implement if needed for token blacklisting
+    return { success: true };
+  }
+
+  @MessagePattern(AUTH_MESSAGE_PATTERNS.SIGNUP)
+  async signup(user: any) {
+    return this.authService.signUp(user);
   }
 }

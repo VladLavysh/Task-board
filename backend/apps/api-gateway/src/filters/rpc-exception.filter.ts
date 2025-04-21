@@ -3,16 +3,29 @@ import {
   Catch,
   ExceptionFilter,
   HttpStatus,
+  Logger,
 } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { Response } from 'express';
-import { Observable, throwError } from 'rxjs';
 
+/**
+ * Global exception filter for the API Gateway
+ *
+ * This filter handles all exceptions thrown by the application and formats them into a standardized response.
+ * It specifically handles RPC exceptions from microservices and translates them to appropriate HTTP responses.
+ */
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
+  private readonly logger = new Logger(AllExceptionsFilter.name);
+
   catch(exception: any, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
+
+    this.logger.error(
+      `Exception caught: ${exception.message}`,
+      exception.stack,
+    );
 
     // Check if this is an error response from a microservice
     if (exception.message && typeof exception.message === 'object') {
@@ -24,6 +37,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
         statusCode,
         message,
         timestamp: new Date().toISOString(),
+        path: ctx.getRequest().url,
       });
     }
 
@@ -41,6 +55,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
         statusCode,
         message,
         timestamp: new Date().toISOString(),
+        path: ctx.getRequest().url,
       });
     }
 
@@ -56,8 +71,9 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     response.status(status).json({
       statusCode: status,
-      message,
+      message: Array.isArray(message) ? message : [message],
       timestamp: new Date().toISOString(),
+      path: ctx.getRequest().url,
     });
   }
 }

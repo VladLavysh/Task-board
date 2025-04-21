@@ -22,27 +22,35 @@ export class CreateUserDto {
 
   @IsNotEmpty()
   @IsString()
-  @MinLength(6)
+  @MinLength(8)
   password: string;
 
   @IsNotEmpty()
   @IsString()
-  @MinLength(6)
-  @Validate(MatchesPasswordConstraint)
-  repeatPassword: string;
+  @Validate(MatchesPasswordConstraint, { message: 'Passwords do not match' })
+  confirmPassword: string;
 
   @IsOptional()
   @IsEnum(UserRole)
   role?: UserRole;
+
+  @IsOptional()
+  @IsString()
+  provider?: string;
+
+  @IsOptional()
+  @IsString()
+  providerId?: string;
+
+  @IsOptional()
+  @IsString()
+  avatar?: string;
 }
 
 export class UpdateUserDto {
   @IsOptional()
   @IsString()
   id?: string;
-
-  @IsOptional()
-  payload?: Partial<UpdateUserDto>;
 
   @IsOptional()
   @IsString()
@@ -54,7 +62,7 @@ export class UpdateUserDto {
 
   @IsOptional()
   @IsString()
-  @MinLength(6)
+  @MinLength(8)
   password?: string;
 
   @IsOptional()
@@ -64,4 +72,16 @@ export class UpdateUserDto {
   @IsOptional()
   @IsEnum(UserRole)
   role?: UserRole;
+
+  @IsOptional()
+  @IsString()
+  provider?: string;
+
+  @IsOptional()
+  @IsString()
+  providerId?: string;
+
+  @IsOptional()
+  @IsString()
+  avatar?: string;
 }
