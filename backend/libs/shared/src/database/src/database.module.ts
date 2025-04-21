@@ -2,7 +2,6 @@ import { DynamicModule, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
 import { ConfigRootModule } from '@app/shared/config/src/config.module';
-import { User } from '@app/shared/entities/user.entity';
 
 @Module({})
 export class DatabaseModule {

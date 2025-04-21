@@ -11,6 +11,10 @@ export class UsersService {
     return this.usersRepository.getUser(id);
   }
 
+  async getUserByEmail(email: string): Promise<User> {
+    return this.usersRepository.getUserByEmail(email);
+  }
+
   async createUser(createUserDto: CreateUserDto): Promise<User> {
     return await this.usersRepository.createUser(createUserDto);
   }
